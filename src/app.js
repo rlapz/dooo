@@ -8,6 +8,7 @@ const app = express();
 
 
 process.chdir(__dirname);
+app.set("views", "./views");
 app.set("view engine", "ejs");
 
 app.use(router);
