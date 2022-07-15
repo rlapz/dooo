@@ -3,7 +3,7 @@ A Simple "To Do List" Web Application
 
 
 # Features
-- [ ] Docker
+- [x] Docker
 - [ ] OTP Authentication
 - [ ] MariaDB
 - [ ] Forgot Password
