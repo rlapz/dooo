@@ -1,11 +1,11 @@
 const express = require("express");
-const root = require("./routes/root");
+const home = require("./routes/home");
 
 
 const router = express.Router();
 
 
-router.use("/", root);
+router.use("/", home);
 router.use((_, res) => res.status(404).send("Not Found!"));
 
 

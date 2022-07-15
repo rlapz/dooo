@@ -1,5 +1,5 @@
 const index = async (_, res) => {
-	await res.render("root/index", {title: "Home Page"});
+	await res.render("home/index", {title: "Home Page"});
 };
 
 
