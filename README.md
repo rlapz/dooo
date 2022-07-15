@@ -1,5 +1,5 @@
 # dooo
-A Simple To Do Web List Application
+A Simple "To Do List" Web Application
 
 
 # Features
