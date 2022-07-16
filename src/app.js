@@ -1,6 +1,8 @@
 const express = require("express");
 const process = require("process");
 const dotenv = require("dotenv");
+
+const mariadb = require("./db/mariadb");
 const router = require("./router");
 
 
@@ -20,6 +22,7 @@ const server = app.listen(port, () => {
 });
 
 const signal_handler = () => {
+	mariadb.pool.end();
 	server.close(() => console.log("Server stopped!"));
 };
 
