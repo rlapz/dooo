@@ -1,11 +1,11 @@
 const express = require("express");
-const v1 = require("./apis/v1");
+const capi = require("../../controllers/api");
 
 
 const router = express.Router();
 
 
-router.use("/v1", v1);
+router.get("/", capi.test_api);
 
 
 module.exports = router;

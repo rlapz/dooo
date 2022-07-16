@@ -1,8 +1,8 @@
-const db = require("../../db/mariadb");
+const db = require("../db/mariadb");
 
 
 /* Test */
-module.exports = async (_, res) => {
+const test_api = async (_, res) => {
 	let row;
 
 	try {
@@ -16,3 +16,7 @@ module.exports = async (_, res) => {
 	await res.json({status: true, now: row[0].NOW});
 };
 
+
+module.exports = {
+	test_api,
+};
