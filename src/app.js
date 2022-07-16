@@ -13,6 +13,13 @@ app.set("view engine", "ejs");
 
 app.use(router);
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
 	console.log(`Serving... ${port}`);
 });
+
+const signal_handler = () => {
+	server.close(() => console.log("Server stopped!"));
+};
+
+process.on("SIGTERM", signal_handler);
+process.on("SIGINT", signal_handler);
