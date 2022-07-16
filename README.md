@@ -2,14 +2,14 @@
 A Simple "To Do List" Web Application
 
 
-# Features
+# Features [Still under heavy development!]
 - [x] Docker
 - [ ] OTP Authentication
-- [ ] MariaDB
+- [x] MariaDB
 - [ ] Forgot Password
 - [ ] Remember Me
 - [ ] Multi Users
-- [ ] REST API
+- [x] REST API
 - [ ] Responsive UI
 - [ ] Email Notification
 
