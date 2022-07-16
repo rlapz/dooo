@@ -8,7 +8,9 @@ const router = express.Router();
 
 router.use("/", home);
 router.use("/api", api);
-router.use((_, res) => res.status(404).send("Not Found!"));
+router.use(async (_, res) => {
+	await res.status(404).send("Not Found!");
+});
 
 
 module.exports = router;
