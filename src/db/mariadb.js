@@ -1,15 +1,8 @@
 const db = require("mariadb");
+const config = require("../config");
 
 
-const env = process.env;
-const pool = db.createPool({
-	user: env.DB_USER,
-	password: env.DB_PASS,
-	host: env.DB_HOST,
-	database: env.DB_NAME,
-	connectionLimit: process.env.DB_CONN_LIM
-});
-
+const pool = db.createPool(config.db)
 
 module.exports = {
 	pool
