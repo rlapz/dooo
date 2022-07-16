@@ -1,22 +1,11 @@
-const db = require("../db/mariadb");
+const test_model = require("../models/test");
 
 
-/* Test */
-const test_api = async (_, res) => {
-	let row;
-
-	try {
-		row = await db.pool.query("SELECT NOW() AS NOW");
-	} catch (err) {
-		await res.json({status: false, msg: `${err}`});
-		console.error(err);
-		return;
-	}
-
-	await res.json({status: true, now: row[0].NOW});
+const get_test = async (_, res) => {
+	await res.json(await test_model.test());
 };
 
 
 module.exports = {
-	test_api,
+	get_test
 };

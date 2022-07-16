@@ -5,7 +5,7 @@ const capi = require("../../controllers/api");
 const router = express.Router();
 
 
-router.get("/", capi.test_api);
+router.get("/", capi.get_test);
 
 
 module.exports = router;
