@@ -20,9 +20,9 @@ const server = app.listen(port, () => {
 	console.log(`Serving... ${port}`);
 });
 
-const signal_handler = () => {
-	mariadb.pool.end();
+const signal_handler = async () => {
 	server.close(() => console.log("Server stopped!"));
+	await mariadb.pool.end();
 };
 
 process.on("SIGTERM", signal_handler);
