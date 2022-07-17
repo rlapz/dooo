@@ -21,7 +21,7 @@ const server = app.listen(port, () => {
 });
 
 const signal_handler = async () => {
-	server.close(() => console.log("Server stopped!"));
+	server.close(() => console.log("\nServer stopped!"));
 	await mariadb.pool.end();
 };
 

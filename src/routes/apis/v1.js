@@ -5,11 +5,12 @@ const capi = require("../../controllers/api");
 
 const router = express.Router();
 
-router.get("/", capi.get_test);
+router.get("/user", capi.get_user);
+router.get("/user/:id", capi.get_user);
 router.use(async (_, res) => {
 	await res.json({
-		status: false,
-		result: "404 Not Found!"
+		status: 404,
+		result: "Not Found!"
 	});
 });
 
