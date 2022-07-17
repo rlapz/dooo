@@ -12,6 +12,7 @@ A Simple "To Do List" Web Application
 - [x] REST API
 - [ ] Responsive UI
 - [ ] Email Notification
+- [ ] Captcha
 
 # License
 MIT
