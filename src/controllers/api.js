@@ -1,25 +1,35 @@
 const user_model = require("../models/user");
 
 
+const bad_request = async (_, res) => {
+	await res.status(400).json({
+		status: false,
+		errno: 400,
+		message: "Bad Request",
+	});
+};
+
 const get_user = async (req, res) => {
 	const id = req.params.id;
-	let ret = {
-		status: 200,
+	const ret = {
+		status: true,
 		rows: 0,
-		result: []
+		data: [],
 	};
 
+
 	if (id)
-		ret.result = await user_model.get_by_id(id);
+		ret.data = await user_model.get_by_id(id);
 	else
-		ret.result = await user_model.get_all();
+		ret.data = await user_model.get_all();
 
-	ret.rows = ret.result.length;
+	ret.rows = ret.data.length;
 
-	await res.status(ret.status).json(ret);
+	await res.json(ret);
 };
 
 
 module.exports = {
+	bad_request,
 	get_user,
 };
