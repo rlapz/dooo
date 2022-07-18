@@ -1,7 +1,7 @@
 const db = require("../db/mariadb").pool;
 
 
-const sql_select = "SELECT title, detail, status status FROM todo";
+const sql_select = "SELECT title, detail, status FROM todo";
 
 
 const get_all = async () => {
