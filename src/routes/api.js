@@ -1,13 +1,17 @@
 const express = require("express");
 
-const capi = require("../controllers/api");
-const v1 = require("./apis/v1");
+const api = require("../controllers/api");
 
 
 const router = express.Router();
 
-router.use("/v1", v1);
-router.use(capi.bad_request);
+router.get("/user", api.user.get);
+router.get("/user/:id", api.user.get);
+
+router.get("/todo", api.todo.get);
+router.get("/todo/:id", api.todo.get);
+
+router.use(api.bad_request);
 
 
 module.exports = router;
