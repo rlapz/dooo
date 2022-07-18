@@ -1,12 +1,12 @@
 const express = require("express");
 
-const capi = require("../../controllers/api");
+const api = require("../../controllers/api");
 
 
 const router = express.Router();
 
-router.get("/user", capi.get_user);
-router.get("/user/:id", capi.get_user);
+router.get("/user", api.user.get);
+router.get("/user/:id", api.user.get);
 
 
 module.exports = router;
