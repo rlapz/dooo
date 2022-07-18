@@ -1,4 +1,5 @@
 const user = require("./apis/user");
+const todo = require("./apis/todo");
 
 
 const bad_request = async (_, res) => {
@@ -13,4 +14,5 @@ const bad_request = async (_, res) => {
 module.exports = {
 	bad_request,
 	user,
+	todo
 };

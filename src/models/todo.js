@@ -1,16 +1,16 @@
 const db = require("../db/mariadb").pool;
 
 
-const sql_select = "SELECT first_name, last_name, username, status FROM users";
+const sql_select = "SELECT title, detail, status status FROM todo";
 
 
 const get_all = async () => {
 	try {
-		const res = await db.query({bigIntAsNumber: true, sql: sql_select});
+		const res = await db.query(sql_select);
 
 		return res.slice(0);
 	} catch (err) {
-		console.error(`models.user.get_all: ${err}`);
+		console.error(`models.todo.get_all: ${err}`);
 	}
 
 	return [];
@@ -22,11 +22,11 @@ const get_by_id = async (id) => {
 
 
 	try {
-		const res = await db.query({bigIntAsNumber: true, sql: sql1}, id);
+		const res = await db.query(sql1, [id]);
 
 		return res.slice(0);
 	} catch (err) {
-		console.error(`models.user.get_by_id: ${err}`);
+		console.error(`models.todo.get_by_id: ${err}`);
 	};
 
 	return [];
