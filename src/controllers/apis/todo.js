@@ -17,7 +17,7 @@ const get = async (req, res) => {
 
 	ret.rows = ret.data.length;
 
-	await res.json(ret);
+	res.json(ret);
 };
 
 
