@@ -32,7 +32,7 @@ CREATE TABLE `todo` (
 	`status`  enum('p', 'f', 's') NOT NULL COLLATE utf8mb4_unicode_ci,
 	PRIMARY KEY(`id`),
 	KEY        `user_id` (`user_id`),
-	UNIQUE KEY `title`   (`title`),
+	KEY        `title`   (`title`),
 	KEY        `status`  (`status`),
 
 	CONSTRAINT `todo_fk1` FOREIGN KEY (`user_id`)
