@@ -105,7 +105,7 @@ const sign_in = async (req, res) => {
 		return err.unauthorized(res, "Username is too long, max: 16!");
 
 	if (username_len < 3)
-		return err.unauthorized(res, "Username is too short, max: 3!");
+		return err.unauthorized(res, "Username is too short, min: 3!");
 
 	if (!password || (password = password.trim()).length == 0)
 		return err.unauthorized(res, "Password is empty!");
