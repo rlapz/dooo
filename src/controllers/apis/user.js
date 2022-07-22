@@ -118,8 +118,9 @@ const signin = async (req, res) => {
 	}
 
 	const token = jwt.sign(
-		username,
+		{username},
 		config.user.token,
+		{expiresIn: "15m"}
 	);
 
 
