@@ -37,7 +37,7 @@ const get = async (arg) => {
 }
 
 
-const signup = async (args) => {
+const sign_up = async (args) => {
 	try {
 		await db.query(sql_insert, args);
 	} catch (e) {
@@ -64,7 +64,7 @@ const signup = async (args) => {
 };
 
 
-const signin = async (username) => {
+const sign_in = async (username) => {
 	let ret = {
 		status: true,
 	};
@@ -85,6 +85,6 @@ const signin = async (username) => {
 
 module.exports = {
 	get,
-	signup,
-	signin,
+	sign_up,
+	sign_in,
 }

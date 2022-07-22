@@ -11,8 +11,8 @@ router.use(express.json());
 router.get("/user", api.user.get_all);
 router.get("/user/:id", api.user.get_by_id);
 
-router.post("/auth/signUp", api.user.signup);
-router.post("/auth/signIn", api.user.signin);
+router.post("/auth/signUp", api.user.sign_up);
+router.post("/auth/signIn", api.user.sign_in);
 
 router.get("/todo", api.todo.get_all);
 router.get("/todo/:id", api.todo.get_by_id);

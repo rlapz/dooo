@@ -22,7 +22,7 @@ const get_by_id = async (req, res, next) => {
 
 
 /* TODO: Add validation */
-const signup = async (req, res) => {
+const sign_up = async (req, res) => {
 	const p = req.body;
 
 
@@ -50,12 +50,12 @@ const signup = async (req, res) => {
 	try {
 		h_pass = await bcrypt.hash(password, 10);
 	} catch (_e) {
-		console.error(`controllers.apis.user.signup: ${_e}`);
+		console.error(`controllers.apis.user.sign_up: ${_e}`);
 
 		return err.internal_server_error(res);
 	}
 
-	const ret = await user_model.signup([
+	const ret = await user_model.sign_up([
 		first_name,
 		last_name,
 		username,
@@ -72,7 +72,7 @@ const signup = async (req, res) => {
 };
 
 
-const signin = async (req, res) => {
+const sign_in = async (req, res) => {
 	const p = req.body;
 
 	let username = p.username;
@@ -85,7 +85,7 @@ const signin = async (req, res) => {
 	if (!password)
 		return err.unauthorized(res, "Password is empty!");
 
-	const _res = await user_model.signin(username);
+	const _res = await user_model.sign_in(username);
 	if (!_res.status)
 		return err.unauthorized(res, "Invalid username or password!");
 
@@ -94,7 +94,7 @@ const signin = async (req, res) => {
 		if (!cmp)
 			return err.unauthorized(res, "Invalid username or password!");
 	} catch (_e) {
-		console.error(`controllers.apis.user.signin: ${_e}`);
+		console.error(`controllers.apis.user.sign_in: ${_e}`);
 
 		return err.internal_server_error(res);
 	}
@@ -110,6 +110,6 @@ const signin = async (req, res) => {
 module.exports = {
 	get_all,
 	get_by_id,
-	signup,
-	signin,
+	sign_up,
+	sign_in,
 };
