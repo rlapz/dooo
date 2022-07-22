@@ -117,22 +117,15 @@ const signin = async (req, res) => {
 		return res.status(e.errno).json(e);
 	}
 
-	const access_token = jwt.sign(
+	const token = jwt.sign(
 		username,
-		config.user.access_token,
+		config.user.token,
 	);
 
-	const refresh_token = jwt.sign(
-		username,
-		config.user.refresh_token,
-	);
 
 	res.status(200).json({
 		status: true,
-		data: {
-			access_token,
-			refresh_token
-		}
+		token
 	});
 };
 

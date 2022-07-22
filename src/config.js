@@ -8,8 +8,7 @@ const server = {
 };
 
 const user = {
-	access_token: process.env.ACCESS_TOKEN,
-	refresh_token: process.env.REFRESH_TOKEN,
+	token: process.env.TOKEN,
 };
 
 const db = {
