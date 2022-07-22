@@ -29,7 +29,7 @@ const get = async (arg) => {
 		ret.data = await db.query(_sql, _arg);
 		ret.rows = ret.data.length;
 	} catch (e) {
-		console.error(`models.user.get_all: ${e}`);
+		console.error(`models.user.get: ${e}`);
 		return err.internal_server_error();
 	}
 
@@ -75,7 +75,7 @@ const signin = async (username) => {
 		if (ret.data.length == 0)
 			ret.status = false;
 	} catch (e) {
-		console.error(`models.user.get_by_id: ${e}`);
+		console.error(`models.user.signin: ${e}`);
 		return err.internal_server_error();
 	}
 
