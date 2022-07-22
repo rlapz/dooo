@@ -1,7 +1,9 @@
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const user_model = require("../../models/user");
 const err = require("../../utils/api_error");
+const config = require("../../config");
 
 
 const get_all = async (_, res) => {
@@ -79,8 +81,65 @@ const signup = async (req, res) => {
 };
 
 
+const signin = async (req, res) => {
+	const p = req.body;
+
+	let username = p.username;
+	if (!username) {
+		const e = err.unauthorized(`Username is empty!`);
+		return res.status(e.errno).json(e);
+	}
+
+	username = username.trim();
+
+	let password = p.password;
+	if (!password) {
+		const e = err.unauthorized(`Password is empty!`);
+		return res.status(e.errno).json(e);
+	}
+
+	const _res = await user_model.signin(username);
+	if (!_res.status) {
+		const e = err.unauthorized(`Invalid username or password!`);
+		return res.status(e.errno).json(e);
+	}
+
+	try {
+		const cmp = await bcrypt.compare(password, _res.data[0].password);
+		if (!cmp) {
+			const e = err.unauthorized(`Invalid username or password!`);
+			return res.status(e.errno).json(e);
+		}
+	} catch (_e) {
+		console.error(`controllers.apis.user.signin: ${_e}`);
+
+		const e = err.internal_server_error();
+		return res.status(e.errno).json(e);
+	}
+
+	const access_token = jwt.sign(
+		username,
+		config.user.access_token,
+	);
+
+	const refresh_token = jwt.sign(
+		username,
+		config.user.refresh_token,
+	);
+
+	res.status(200).json({
+		status: true,
+		data: {
+			access_token,
+			refresh_token
+		}
+	});
+};
+
+
 module.exports = {
 	get_all,
 	get_by_id,
 	signup,
+	signin,
 };

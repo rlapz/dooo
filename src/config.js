@@ -7,6 +7,11 @@ const server = {
 	port: process.env.PORT || 8000,
 };
 
+const user = {
+	access_token: process.env.ACCESS_TOKEN,
+	refresh_token: process.env.REFRESH_TOKEN,
+};
+
 const db = {
 	user: process.env.DB_USER,
 	password: process.env.DB_PASS,
@@ -18,5 +23,6 @@ const db = {
 
 module.exports = {
 	server,
+	user,
 	db
 };

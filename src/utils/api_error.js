@@ -15,6 +15,12 @@ const bad_request = (reason) => {
 	return _error("Bad Request", reason, 400);
 };
 
+
+const unauthorized = (reason) => {
+	return _error("Unauthorized", reason, 401);
+};
+
+
 const internal_server_error = (reason) => {
 	return _error("Internal Server Error", reason, 500);
 }
@@ -22,5 +28,6 @@ const internal_server_error = (reason) => {
 
 module.exports = {
 	bad_request,
+	unauthorized,
 	internal_server_error
 };

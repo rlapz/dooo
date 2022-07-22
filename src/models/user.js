@@ -3,6 +3,8 @@ const err = require("../utils/api_error");
 
 
 const sql_select = "SELECT first_name, last_name, username, status FROM users";
+const sql_select_auth = "SELECT username, password FROM users " +
+	"WHERE username = ?";
 const sql_insert = "INSERT INTO users(first_name, last_name, username, " +
 	"email, password, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
@@ -75,8 +77,28 @@ const signup = async (args) => {
 };
 
 
+const signin = async (username) => {
+	let ret = {
+		status: true,
+	};
+
+
+	try {
+		ret.data = await db.query(sql_select_auth, username);
+		if (ret.data.length == 0)
+			ret.status = false;
+	} catch (e) {
+		console.error(`models.user.get_by_id: ${e}`);
+		return err.internal_server_error();
+	}
+
+	return ret;
+};
+
+
 module.exports = {
 	get_all,
 	get_by_id,
 	signup,
+	signin,
 }

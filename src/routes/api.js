@@ -12,6 +12,7 @@ router.get("/user", api.user.get_all);
 router.get("/user/:id", api.user.get_by_id);
 
 router.post("/auth/signup", api.user.signup);
+router.post("/auth/signin", api.user.signin);
 
 router.get("/todo", api.todo.get_all);
 router.get("/todo/:id", api.todo.get_by_id);
