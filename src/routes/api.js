@@ -6,8 +6,12 @@ const err = require("../utils/api_error");
 
 const router = express.Router();
 
+router.use(express.json());
+
 router.get("/user", api.user.get_all);
 router.get("/user/:id", api.user.get_by_id);
+
+router.post("/auth/signup", api.user.signup);
 
 router.get("/todo", api.todo.get_all);
 router.get("/todo/:id", api.todo.get_by_id);
