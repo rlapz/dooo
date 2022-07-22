@@ -18,8 +18,8 @@ A Simple "To Do List" Web Application
 # How to install?
 
 ## Without Docker
-1. Copy `env.example` file into `src/.env`
-2. Edit `src/.env` file if necessary.
+1. Copy `env.example` file to `.env`
+2. Edit `.env` file if necessary.
 3. Apply `database.sql` mariadb database scheme.
 4. Run `npm i`
 5. Run `node ./src/app.js`
