@@ -3,13 +3,12 @@ const err = require("../utils/api_error");
 
 
 const sql_select = "SELECT first_name, last_name, username, status FROM users";
-const sql_select_auth = "SELECT username, password FROM users " +
-	"WHERE username = ?";
+const sql_select_auth = "SELECT username, password FROM users WHERE username = ?";
 const sql_insert = "INSERT INTO users(first_name, last_name, username, " +
 	"email, password, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
 
-const get_all = async () => {
+const get = async (arg) => {
 	let ret = {
 		status: true,
 		rows: 0,
@@ -18,7 +17,16 @@ const get_all = async () => {
 
 
 	try {
-		ret.data = await db.query(sql_select);
+		let _arg;
+		let _sql = sql_select;
+
+		if (arg) {
+			const __arg = Object.entries(arg)[0];
+			_sql = `${sql_select} WHERE \`${__arg[0]}\` = ?`;
+			_arg = __arg[1];
+		}
+
+		ret.data = await db.query(_sql, _arg);
 		ret.rows = ret.data.length;
 	} catch (e) {
 		console.error(`models.user.get_all: ${e}`);
@@ -27,27 +35,6 @@ const get_all = async () => {
 
 	return ret;
 }
-
-
-const get_by_id = async (id) => {
-	const sql1 = `${sql_select} WHERE \`id\` = ?`;
-	let ret = {
-		status: true,
-		rows: 0,
-		data: []
-	};
-
-
-	try {
-		ret.data = await db.query(sql1, [id]);
-		ret.rows = ret.data.length;
-	} catch (e) {
-		console.error(`models.user.get_by_id: ${e}`);
-		return err.internal_server_error();
-	}
-
-	return ret;
-};
 
 
 const signup = async (args) => {
@@ -97,8 +84,7 @@ const signin = async (username) => {
 
 
 module.exports = {
-	get_all,
-	get_by_id,
+	get,
 	signup,
 	signin,
 }

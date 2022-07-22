@@ -6,17 +6,18 @@ const token = require("../../utils/token");
 
 
 const get_all = async (_, res) => {
-	res.status(200).json(await user_model.get_all());
+	res.status(200).json(await user_model.get());
 };
 
 
 const get_by_id = async (req, res, next) => {
 	const id = req.params.id;
 
+
 	if (!id)
 		next();
 
-	res.status(200).json(await user_model.get_by_id(id));
+	res.status(200).json(await user_model.get({id}));
 };
 
 
