@@ -12,6 +12,7 @@ CREATE TABLE `users` (
 
 	PRIMARY KEY (`id`),
 	UNIQUE  KEY `username`  (`username`),
+	UNIQUE  KEY `email`     (`email`),
 	KEY         `first_name`(`first_name`),
 	KEY         `last_name` (`last_name`),
 	KEY         `status`    (`status`),
