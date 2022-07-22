@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
 	`id`         bigint unsigned     NOT NULL AUTO_INCREMENT,
 	`first_name` varchar(64)         NOT NULL COLLATE utf8mb4_unicode_ci,
-	`last_name`  varchar(64)         NOT NULL COLLATE utf8mb4_unicode_ci,
+	`last_name`  varchar(64)         DEFAULT NULL COLLATE utf8mb4_unicode_ci,
 	`username`   varchar(16)         NOT NULL COLLATE utf8mb4_unicode_ci,
 	`email`      varchar(32)         NOT NULL COLLATE utf8mb4_unicode_ci,
 	`password`   text                NOT NULL COLLATE utf8mb4_unicode_ci,
