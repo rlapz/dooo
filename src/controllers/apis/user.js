@@ -1,9 +1,8 @@
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 
 const user_model = require("../../models/user");
 const err = require("../../utils/api_error");
-const config = require("../../config");
+const token = require("../../utils/token");
 
 
 const get_all = async (_, res) => {
@@ -117,16 +116,10 @@ const signin = async (req, res) => {
 		return res.status(e.errno).json(e);
 	}
 
-	const token = jwt.sign(
-		{username},
-		config.user.token,
-		{expiresIn: "15m"}
-	);
-
 
 	res.status(200).json({
 		status: true,
-		token
+		token: token.get({username})
 	});
 };
 

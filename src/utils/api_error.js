@@ -21,6 +21,11 @@ const unauthorized = (reason) => {
 };
 
 
+const forbidden = (reason) => {
+	return _error("Forbidden", reason, 403);
+};
+
+
 const internal_server_error = (reason) => {
 	return _error("Internal Server Error", reason, 500);
 }
@@ -29,5 +34,6 @@ const internal_server_error = (reason) => {
 module.exports = {
 	bad_request,
 	unauthorized,
+	forbidden,
 	internal_server_error
 };
