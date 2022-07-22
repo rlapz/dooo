@@ -17,11 +17,7 @@ router.post("/auth/signIn", api.user.signin);
 router.get("/todo", api.todo.get_all);
 router.get("/todo/:id", api.todo.get_by_id);
 
-router.use((_, res) => {
-	const e = err.bad_request();
-
-	res.status(e.errno).json(e);
-});
+router.use((_, res) => err.bad_request(res));
 
 
 module.exports = router;

@@ -1,33 +1,39 @@
-const _error = (message, reason, errno) => {
+const _error = (res, message, reason, errno) => {
 	if (reason)
 		message = `${message}: ${reason}`;
 
 
-	return {
+	const ret = {
 		status: false,
 		errno,
 		message
-	}
+	};
+
+
+	if (res)
+		return res.status(errno).json(ret);
+
+	return ret;
 };
 
 
-const bad_request = (reason) => {
-	return _error("Bad Request", reason, 400);
+const bad_request = (res, reason) => {
+	return _error(res, "Bad Request", reason, 400);
 };
 
 
-const unauthorized = (reason) => {
-	return _error("Unauthorized", reason, 401);
+const unauthorized = (res, reason) => {
+	return _error(res, "Unauthorized", reason, 401);
 };
 
 
-const forbidden = (reason) => {
-	return _error("Forbidden", reason, 403);
+const forbidden = (res, reason) => {
+	return _error(res, "Forbidden", reason, 403);
 };
 
 
-const internal_server_error = (reason) => {
-	return _error("Internal Server Error", reason, 500);
+const internal_server_error = (res, reason) => {
+	return _error(res, "Internal Server Error", reason, 500);
 }
 
 

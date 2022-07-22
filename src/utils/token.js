@@ -11,24 +11,18 @@ const get = (payload) => {
 
 const verify = async (req, res, next) => {
 	const auth = req.headers["authorization"];
-	if (!auth) {
-		const e = err.forbidden();
-		res.status(e.errno).json(e);
-	}
+	if (!auth)
+		return err.forbidden();
 
 	let token = auth.split(" ");
-	if (token) {
+	if (token)
 		token = token[1];
-	} else {
-		const e = err.forbidden();
-		res.status(e.errno).json(e);
-	}
+	else
+		return err.forbidden();
 
 	jwt.verify(token, config.user.token, (_err, _res) => {
-		if (_err) {
-			const e = err.forbidden("Invalid Token!");
-			return res.status(e.errno).json(e);
-		}
+		if (_err)
+			return err.forbidden("Invalid Token!");
 
 		req.username = _res;
 	});

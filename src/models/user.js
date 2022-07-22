@@ -53,7 +53,7 @@ const signup = async (args) => {
 			else if (field === "email")
 				r = `Email ${val} is already registered!`;
 
-			return err.bad_request(r);
+			return err.bad_request(null, r);
 		}
 
 		console.error(`models.user.signup: ${e}`);

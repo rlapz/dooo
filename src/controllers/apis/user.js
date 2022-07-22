@@ -27,32 +27,24 @@ const signup = async (req, res) => {
 
 
 	const first_name = p.first_name;
-	if (!first_name) {
-		const e = err.bad_request("'first_name' is empty!");
-		return res.status(e.errno).json(e);
-	}
+	if (!first_name)
+		return err.bad_request(res, "'first_name' is empty!");
 
 	let last_name = p.last_name;
 	if (!last_name)
 		last_name = null;
 
 	const username = p.username;
-	if (!username) {
-		const e = err.bad_request("'username' is empty!");
-		return res.status(e.errno).json(e);
-	}
+	if (!username)
+		return err.bad_request(res, "'username' is empty!");
 
 	const email = p.email;
-	if (!email) {
-		const e = err.bad_request("'email' is empty!");
-		return res.status(e.errno).json(e);
-	}
+	if (!email)
+		return err.bad_request(res, "'email' is empty!");
 
 	const password = p.password;
-	if (!password) {
-		const e = err.bad_request("'password' is empty!");
-		return res.status(e.errno).json(e);
-	}
+	if (!password)
+		return err.bad_request(res, "'password' is empty!");
 
 	let h_pass;
 	try {
@@ -60,8 +52,7 @@ const signup = async (req, res) => {
 	} catch (_e) {
 		console.error(`controllers.apis.user.signup: ${_e}`);
 
-		const e = err.internal_server_error();
-		return res.status(e.errno).json(e);
+		return err.internal_server_error(res);
 	}
 
 	const ret = await user_model.signup([
@@ -85,36 +76,27 @@ const signin = async (req, res) => {
 	const p = req.body;
 
 	let username = p.username;
-	if (!username) {
-		const e = err.unauthorized(`Username is empty!`);
-		return res.status(e.errno).json(e);
-	}
+	if (!username)
+		return err.unauthorized(res, "Username is empty!");
 
 	username = username.trim();
 
 	let password = p.password;
-	if (!password) {
-		const e = err.unauthorized(`Password is empty!`);
-		return res.status(e.errno).json(e);
-	}
+	if (!password)
+		return err.unauthorized(res, "Password is empty!");
 
 	const _res = await user_model.signin(username);
-	if (!_res.status) {
-		const e = err.unauthorized(`Invalid username or password!`);
-		return res.status(e.errno).json(e);
-	}
+	if (!_res.status)
+		return err.unauthorized(res, "Invalid username or password!");
 
 	try {
 		const cmp = await bcrypt.compare(password, _res.data[0].password);
-		if (!cmp) {
-			const e = err.unauthorized(`Invalid username or password!`);
-			return res.status(e.errno).json(e);
-		}
+		if (!cmp)
+			return err.unauthorized(res, "Invalid username or password!");
 	} catch (_e) {
 		console.error(`controllers.apis.user.signin: ${_e}`);
 
-		const e = err.internal_server_error();
-		return res.status(e.errno).json(e);
+		return err.internal_server_error(res);
 	}
 
 
