@@ -11,7 +11,7 @@ const get_all = async (_, res) => {
 
 
 const get_by_id = async (req, res, next) => {
-	const id = req.params.id;
+	const {id} = req.params;
 
 
 	if (!id)
@@ -23,26 +23,21 @@ const get_by_id = async (req, res, next) => {
 
 /* TODO: Add validation */
 const sign_up = async (req, res) => {
-	const p = req.body;
+	let {first_name, last_name, username, email, password} = req.body;
 
 
-	const first_name = p.first_name;
 	if (!first_name)
 		return err.bad_request(res, "'first_name' is empty!");
 
-	let last_name = p.last_name;
 	if (!last_name)
 		last_name = null;
 
-	const username = p.username;
 	if (!username)
 		return err.bad_request(res, "'username' is empty!");
 
-	const email = p.email;
 	if (!email)
 		return err.bad_request(res, "'email' is empty!");
 
-	const password = p.password;
 	if (!password)
 		return err.bad_request(res, "'password' is empty!");
 
@@ -73,15 +68,13 @@ const sign_up = async (req, res) => {
 
 
 const sign_in = async (req, res) => {
-	const p = req.body;
+	let {username, password} = req.body;
 
-	let username = p.username;
 	if (!username)
 		return err.unauthorized(res, "Username is empty!");
 
 	username = username.trim();
 
-	let password = p.password;
 	if (!password)
 		return err.unauthorized(res, "Password is empty!");
 
