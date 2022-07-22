@@ -4,6 +4,7 @@ CREATE TABLE `users` (
 	`first_name` varchar(64)         NOT NULL COLLATE utf8mb4_unicode_ci,
 	`last_name`  varchar(64)         NOT NULL COLLATE utf8mb4_unicode_ci,
 	`username`   varchar(16)         NOT NULL COLLATE utf8mb4_unicode_ci,
+	`email`      varchar(32)         NOT NULL COLLATE utf8mb4_unicode_ci,
 	`password`   text                NOT NULL COLLATE utf8mb4_unicode_ci,
 	`status`     enum('b', 'd', 'e') NOT NULL,
 	`created_at` datetime            NOT NULL,
