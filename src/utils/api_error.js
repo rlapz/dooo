@@ -1,7 +1,6 @@
 const _error = (res, message, reason, errno) => {
 	if (reason)
-		message = `${message}: ${reason}`;
-
+		message = reason;
 
 	const ret = {
 		status: false,

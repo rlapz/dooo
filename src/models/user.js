@@ -45,9 +45,9 @@ const sign_up = async (args) => {
 
 
 			if (field === "username")
-				r = `Username ${val} is already registered!`;
+				r = `Username ${val} is already registered.`;
 			else if (field === "email")
-				r = `Email ${val} is already registered!`;
+				r = `Email ${val} is already registered.`;
 
 			return err.bad_request(null, r);
 		}
