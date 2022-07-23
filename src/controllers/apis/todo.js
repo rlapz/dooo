@@ -1,8 +1,8 @@
-const todo_model = require("../../models/todo");
+const todo = require("../../models/todo");
 
 
 const get_all = async (_, res) => {
-	res.status(200).json(await todo_model.get_all());
+	res.status(200).json(await todo.get_all());
 };
 
 
@@ -12,7 +12,7 @@ const get_by_id = async (req, res, next) => {
 	if (!id)
 		next();
 
-	res.status(200).json(await todo_model.get_by_id(id));
+	res.status(200).json(await todo.get_by_id(id));
 };
 
 

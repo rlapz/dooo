@@ -1,13 +1,13 @@
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 
-const user_model = require("../../models/user");
+const user = require("../../models/user");
 const err = require("../../utils/api_error");
 const token = require("../../utils/token");
 
 
 const get_all = async (_, res) => {
-	res.status(200).json(await user_model.get());
+	res.status(200).json(await user.get());
 };
 
 
@@ -18,7 +18,7 @@ const get_by_id = async (req, res, next) => {
 	if (!id)
 		next();
 
-	res.status(200).json(await user_model.get({id}));
+	res.status(200).json(await user.get({id}));
 };
 
 
@@ -76,7 +76,7 @@ const sign_up = async (req, res) => {
 		return err.internal_server_error(res);
 	}
 
-	const ret = await user_model.sign_up([
+	const ret = await user.sign_up([
 		first_name,
 		last_name,
 		username,
@@ -117,7 +117,7 @@ const sign_in = async (req, res) => {
 	if (password_len < 6)
 		return err.unauthorized(res, "Password is too short, min: 6!");
 
-	const _res = await user_model.sign_in(username);
+	const _res = await user.sign_in(username);
 	if (!_res.status)
 		return err.unauthorized(res, "Invalid username or password!");
 
