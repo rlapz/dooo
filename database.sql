@@ -1,14 +1,16 @@
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
-	`id`         bigint unsigned     NOT NULL AUTO_INCREMENT,
-	`first_name` varchar(64)         NOT NULL COLLATE utf8mb4_unicode_ci,
-	`last_name`  varchar(64)         DEFAULT NULL COLLATE utf8mb4_unicode_ci,
-	`username`   varchar(16)         NOT NULL COLLATE utf8mb4_unicode_ci,
-	`email`      varchar(32)         NOT NULL COLLATE utf8mb4_unicode_ci,
-	`password`   text                NOT NULL COLLATE utf8mb4_unicode_ci,
-	`status`     enum('b', 'd', 'e') NOT NULL,
-	`created_at` datetime            NOT NULL,
-	`updated_at` datetime            DEFAULT NULL,
+	`id`         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`first_name` VARCHAR(64)     NOT NULL COLLATE utf8mb4_unicode_ci,
+	`last_name`  VARCHAR(64)     DEFAULT NULL COLLATE utf8mb4_unicode_ci,
+	`username`   VARCHAR(16)     NOT NULL COLLATE utf8mb4_unicode_ci,
+	`email`      VARCHAR(32)     NOT NULL COLLATE utf8mb4_unicode_ci,
+	`password`   VARCHAR(255)    NOT NULL COLLATE utf8mb4_unicode_ci,
+
+	-- true: enabled, false: disabled -- 
+	`status`     BOOLEAN         NOT NULL,
+	`created_at` DATETIME        NOT NULL,
+	`updated_at` DATETIME        DEFAULT NULL,
 
 	PRIMARY KEY (`id`),
 	UNIQUE  KEY `username`  (`username`),
@@ -27,11 +29,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `todo`;
 CREATE TABLE `todo` (
-	`id`      bigint unsigned     NOT NULL AUTO_INCREMENT,
-	`user_id` bigint unsigned     NOT NULL,
-	`title`   varchar(32)         NOT NULL COLLATE utf8mb4_unicode_ci,
-	`detail`  text                DEFAULT NULL COLLATE utf8mb4_unicode_ci,
-	`status`  enum('p', 'f', 's') NOT NULL COLLATE utf8mb4_unicode_ci,
+	`id`      BIGINT UNSIGNED     NOT NULL AUTO_INCREMENT,
+	`user_id` BIGINT UNSIGNED     NOT NULL,
+	`title`   VARCHAR(32)         NOT NULL COLLATE utf8mb4_unicode_ci,
+	`detail`  TEXT                DEFAULT NULL COLLATE utf8mb4_unicode_ci,
+
+	-- p: pending, f: finished, c: cancelled --
+	`status`  ENUM('p', 'f', 'c') NOT NULL COLLATE utf8mb4_unicode_ci,
+
 	PRIMARY KEY(`id`),
 	KEY        `user_id` (`user_id`),
 	KEY        `title`   (`title`),
