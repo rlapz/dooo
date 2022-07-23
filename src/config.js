@@ -9,6 +9,7 @@ const server = {
 
 const user = {
 	token: process.env.TOKEN,
+	token_expire: process.env.TOKEN_EXPIRE
 };
 
 const db = {

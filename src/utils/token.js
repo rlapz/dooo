@@ -5,7 +5,11 @@ const err = require("./api_error");
 
 
 const get = (payload) => {
-	return jwt.sign(payload, config.user.token, {expiresIn: "15m"});
+	return jwt.sign(
+		payload,
+		config.user.token,
+		{expiresIn: config.user.token_expire}
+	);
 };
 
 
