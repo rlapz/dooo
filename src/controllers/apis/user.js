@@ -22,48 +22,70 @@ const get_by_id = async (req, res, next) => {
 };
 
 
+// TODO: Sanitize user input
 const sign_up = async (req, res) => {
 	let {first_name, last_name, username, email, password} = req.body;
 
 
-	if (!first_name || (first_name = first_name.trim()).length == 0)
-		return err.bad_request(res, "'first_name' is empty!");
+	first_name ??= "";
+	last_name ??= "";
+	username ??= "";
+	email ??= "";
+	password ??= "";
+
 
 	const first_name_len = first_name.length;
+	if (validator.contains(first_name, " "))
+		return err.bad_request(res, "'first_name' should not contains whitespace.");
+
+	if (first_name_len == 0)
+		return err.bad_request(res, "'first_name' is empty.");
+
+	if (first_name_len < 1)
+		return err.bad_request(res, "'first_name' is too short, min: 1.");
+
 	if (first_name_len > 64)
-		return err.bad_request(res, "'first_name' is too long, max: 64!");
+		return err.bad_request(res, "'first_name' is too long, max: 64.");
 
-	if (!last_name)
-		last_name = null;
 
-	if (last_name && last_name.length > 64)
-		return err.bad_request(res, "'last_name' is too long, max: 64!");
+	const last_name_len = last_name.length;
+	if (last_name.length > 64)
+		return err.bad_request(res, "'last_name' is too long, max: 64.");
 
-	if (!username || (username = username.trim()).length == 0)
-		return err.bad_request(res, "'username' is empty!");
+	if (validator.contains(last_name, " "))
+		return err.bad_request(res, "'last_name' should not contains whitespace.");
+
+	if (last_name_len == 0)
+		last_name = null; // last_name is optional
+
 
 	const username_len = username.length;
-	if (username_len > 16)
-		return err.bad_request(res, "'username' is too long, max: 16!");
+	if (validator.contains(username, " "))
+		return err.bad_request(res, "'username' should not contains whitespace.");
+
+	if (username_len == 0)
+		return err.bad_request(res, "'username' is empty.");
 
 	if (username_len < 3)
-		return err.bad_request(res, "'username' is too short, min: 3!");
+		return err.bad_request(res, "'username' is too short, min: 3.");
 
-	if (!email || (email = email.trim()) == 0)
-		return err.bad_request(res, "'email' is empty!");
+	if (username_len > 16)
+		return err.bad_request(res, "'username' is too long, max: 16.");
+
 
 	if (!validator.isEmail(email))
-		return err.bad_request(res, "Invalid 'email'!");
+		return err.bad_request(res, "Invalid 'email' address.");
 
-	if (!password || (password = password.trim()).length == 0)
-		return err.bad_request(res, "'password' is empty!");
 
 	const password_len = password.length;
-	if (password_len > 255)
-		return err.bad_request(res, "'password' is too long, max: 255!");
+	if (password_len == 0)
+		return err.bad_request(res, "'password' is empty.");
 
 	if (password_len < 6)
-		return err.bad_request(res, "'password' is too short, min: 6!");
+		return err.bad_request(res, "'password' is too short, min: 6.");
+
+	if (password_len > 255)
+		return err.bad_request(res, "'password' is too long, max: 255.");
 
 
 	let h_pass;
@@ -92,40 +114,51 @@ const sign_up = async (req, res) => {
 };
 
 
+// TODO: Sanitize user input
 const sign_in = async (req, res) => {
 	let {username, password} = req.body;
 
 
-	if (!username || (username = username.trim()).length == 0)
-		return err.unauthorized(res, "'username' is empty!");
+	username ??= "";
+	password ??= "";
+
 
 	const username_len = username.length;
-	if (username_len > 16)
-		return err.unauthorized(res, "'username' is too long, max: 16!");
+	if (validator.contains(username, " "))
+		return err.unauthorized(res, "'username' should not contains whitespace.");
+
+	if (username_len == 0)
+		return err.unauthorized(res, "'username' is empty.");
 
 	if (username_len < 3)
-		return err.unauthorized(res, "'username' is too short, min: 3!");
+		return err.unauthorized(res, "'username' is too short, min: 3.");
 
-	if (!password || (password = password.trim()).length == 0)
-		return err.unauthorized(res, "'password' is empty!");
+	if (username_len > 16)
+		return err.unauthorized(res, "'username' is too long, max: 16.");
+
 
 	const password_len = password.length;
-	if (password_len > 255)
-		return err.unauthorized(res, "'ppassword' is too long, max: 255!");
+	if (password_len == 0)
+		return err.unauthorized(res, "'password' is empty.");
 
 	if (password_len < 6)
-		return err.unauthorized(res, "'password' is too short, min: 6!");
+		return err.unauthorized(res, "'password' is too short, min: 6.");
+
+	if (password_len > 255)
+		return err.unauthorized(res, "'password' is too long, max: 255.");
+
 
 	const _res = await user.sign_in(username);
 	if (!_res.status)
 		return res.status(_res.errno).json(_res);
+
 
 	const _pass = _res.data[0].password;
 	const _email = _res.data[0].email;
 	try {
 		const cmp = await bcrypt.compare(password, _pass);
 		if (!cmp)
-			return err.unauthorized(res, "Invalid 'username' or 'password'!");
+			return err.unauthorized(res, "Invalid 'username' or 'password'.");
 	} catch (_e) {
 		console.error(`controllers.apis.user.sign_in: ${_e}`);
 		return err.internal_server_error(res);
