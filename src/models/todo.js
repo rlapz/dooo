@@ -23,8 +23,7 @@ const get_all = async () => {
 			ret.data = _ret[0];
 	} catch (e) {
 		console.error(`models.todo.get_all: ${e}`);
-		err.internal_server_error();
-
+		return err.internal_server_error();
 	}
 
 	return ret;
@@ -46,7 +45,7 @@ const get_by_id = async (id) => {
 			ret.data = _ret[0];
 	} catch (e) {
 		console.error(`models.todo.get_by_id: ${e}`);
-		err.internal_server_error();
+		return err.internal_server_error();
 	};
 
 	return ret;
