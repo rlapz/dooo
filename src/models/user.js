@@ -75,7 +75,7 @@ const sign_in = async (username) => {
 		ret.data = await db.query(sql_select_auth, username);
 		if (ret.data.length === 0) {
 			return err.unauthorized(null,
-				"Invalid 'username' or 'password'!"
+				"Wrong 'username' or 'password'!"
 			);
 		}
 	} catch (e) {

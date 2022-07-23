@@ -3,6 +3,7 @@ const validator = require("validator");
 
 const user = require("../../models/user");
 const err = require("../../utils/api_error");
+const e_validator = require("../../utils/validator");
 const token = require("../../utils/token");
 
 
@@ -22,7 +23,6 @@ const get_by_id = async (req, res, next) => {
 };
 
 
-// TODO: Sanitize user input
 const sign_up = async (req, res) => {
 	let {first_name, last_name, username, email, password} = req.body;
 
@@ -35,36 +35,33 @@ const sign_up = async (req, res) => {
 
 
 	const first_name_len = first_name.length;
-	if (validator.contains(first_name, " "))
-		return err.bad_request(res, "'first_name' should not contains whitespace.");
-
 	if (first_name_len == 0)
 		return err.bad_request(res, "'first_name' is empty.");
 
-	if (first_name_len < 1)
-		return err.bad_request(res, "'first_name' is too short, min: 1.");
+	if (!e_validator.is_normal(first_name))
+		return err.bad_request(res, "'first_name' is not valid.");
 
 	if (first_name_len > 64)
 		return err.bad_request(res, "'first_name' is too long, max: 64.");
 
 
 	const last_name_len = last_name.length;
+	if (!e_validator.is_normal(last_name))
+		return err.bad_request(res, "'last_name' is not valid.");
+
 	if (last_name_len > 64)
 		return err.bad_request(res, "'last_name' is too long, max: 64.");
-
-	if (validator.contains(last_name, " "))
-		return err.bad_request(res, "'last_name' should not contains whitespace.");
 
 	if (last_name_len == 0)
 		last_name = null; // last_name is optional
 
 
 	const username_len = username.length;
-	if (validator.contains(username, " "))
-		return err.bad_request(res, "'username' should not contains whitespace.");
-
 	if (username_len == 0)
 		return err.bad_request(res, "'username' is empty.");
+
+	if (!e_validator.is_normal(username))
+		return err.bad_request(res, "'username' is not valid.");
 
 	if (username_len < 3)
 		return err.bad_request(res, "'username' is too short, min: 3.");
@@ -74,7 +71,7 @@ const sign_up = async (req, res) => {
 
 
 	if (!validator.isEmail(email))
-		return err.bad_request(res, "Invalid 'email' address.");
+		return err.bad_request(res, "'email' is not valid.");
 
 
 	const password_len = password.length;
@@ -114,7 +111,6 @@ const sign_up = async (req, res) => {
 };
 
 
-// TODO: Sanitize user input
 const sign_in = async (req, res) => {
 	let {username, password} = req.body;
 
@@ -124,11 +120,11 @@ const sign_in = async (req, res) => {
 
 
 	const username_len = username.length;
-	if (validator.contains(username, " "))
-		return err.unauthorized(res, "'username' should not contains whitespace.");
-
 	if (username_len == 0)
 		return err.unauthorized(res, "'username' is empty.");
+
+	if (!e_validator.is_normal(username))
+		return err.unauthorized(res, "'username' is not valid.");
 
 	if (username_len < 3)
 		return err.unauthorized(res, "'username' is too short, min: 3.");
@@ -158,7 +154,7 @@ const sign_in = async (req, res) => {
 	try {
 		const cmp = await bcrypt.compare(password, _pass);
 		if (!cmp)
-			return err.unauthorized(res, "Invalid 'username' or 'password'.");
+			return err.unauthorized(res, "Wrong 'username' or 'password'.");
 	} catch (_e) {
 		console.error(`controllers.apis.user.sign_in: ${_e}`);
 		return err.internal_server_error(res);
