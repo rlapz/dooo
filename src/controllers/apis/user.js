@@ -49,7 +49,7 @@ const sign_up = async (req, res) => {
 
 
 	const last_name_len = last_name.length;
-	if (last_name.length > 64)
+	if (last_name_len > 64)
 		return err.bad_request(res, "'last_name' is too long, max: 64.");
 
 	if (validator.contains(last_name, " "))
