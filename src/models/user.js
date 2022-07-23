@@ -67,13 +67,17 @@ const sign_up = async (args) => {
 const sign_in = async (username) => {
 	let ret = {
 		status: true,
+		data: []
 	};
 
 
 	try {
 		ret.data = await db.query(sql_select_auth, username);
-		if (ret.data.length == 0)
-			ret.status = false;
+		if (ret.data.length === 0) {
+			return err.unauthorized(null,
+				"Invalid 'username' or 'password'!"
+			);
+		}
 	} catch (e) {
 		console.error(`models.user.signin: ${e}`);
 		return err.internal_server_error();

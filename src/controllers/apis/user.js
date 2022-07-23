@@ -22,7 +22,6 @@ const get_by_id = async (req, res, next) => {
 };
 
 
-/* TODO: Add validation */
 const sign_up = async (req, res) => {
 	let {first_name, last_name, username, email, password} = req.body;
 
@@ -98,43 +97,44 @@ const sign_in = async (req, res) => {
 
 
 	if (!username || (username = username.trim()).length == 0)
-		return err.unauthorized(res, "Username is empty!");
+		return err.unauthorized(res, "'username' is empty!");
 
 	const username_len = username.length;
 	if (username_len > 16)
-		return err.unauthorized(res, "Username is too long, max: 16!");
+		return err.unauthorized(res, "'username' is too long, max: 16!");
 
 	if (username_len < 3)
-		return err.unauthorized(res, "Username is too short, min: 3!");
+		return err.unauthorized(res, "'username' is too short, min: 3!");
 
 	if (!password || (password = password.trim()).length == 0)
-		return err.unauthorized(res, "Password is empty!");
+		return err.unauthorized(res, "'password' is empty!");
 
 	const password_len = password.length;
 	if (password_len > 255)
-		return err.unauthorized(res, "Password is too long, max: 255!");
+		return err.unauthorized(res, "'ppassword' is too long, max: 255!");
 
 	if (password_len < 6)
-		return err.unauthorized(res, "Password is too short, min: 6!");
+		return err.unauthorized(res, "'password' is too short, min: 6!");
 
 	const _res = await user.sign_in(username);
 	if (!_res.status)
-		return err.unauthorized(res, "Invalid username or password!");
+		return res.status(_res.errno).json(_res);
 
+	const _pass = _res.data[0].password;
+	const _email = _res.data[0].email;
 	try {
-		const cmp = await bcrypt.compare(password, _res.data[0].password);
+		const cmp = await bcrypt.compare(password, _pass);
 		if (!cmp)
-			return err.unauthorized(res, "Invalid username or password!");
+			return err.unauthorized(res, "Invalid 'username' or 'password'!");
 	} catch (_e) {
 		console.error(`controllers.apis.user.sign_in: ${_e}`);
-
 		return err.internal_server_error(res);
 	}
 
 
 	res.status(200).json({
 		status: true,
-		token: token.get({username})
+		token: token.get({username, email: _email})
 	});
 };
 
