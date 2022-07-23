@@ -1,22 +1,23 @@
 const todo = require("../../models/todo");
 
 
-const get_all = async (_, res) => {
-	res.status(200).json(await todo.get_all());
-};
+const get = async (req, res) => {
+	const {id} = req.body;
+	let ret;
 
 
-const get_by_id = async (req, res, next) => {
-	const id = req.params.id;
+	if (id)
+		ret = await todo.get_by_id(id);
+	else
+		ret = await todo.get_all();
 
-	if (!id)
-		next();
+	if (ret.status)
+		return res.status(200).json(ret);
 
-	res.status(200).json(await todo.get_by_id(id));
+	return res.status(ret.errno).json(ret);
 };
 
 
 module.exports = {
-	get_all,
-	get_by_id,
+	get,
 };

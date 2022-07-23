@@ -14,8 +14,7 @@ router.post("/auth/signIn", api.user.sign_in);
 router.post("/user", api.user.get_by_id);
 router.post("/user/remove", api.user.remove);
 
-router.get("/todo", api.todo.get_all);
-router.get("/todo/:id", api.todo.get_by_id);
+router.post("/todo", api.todo.get);
 
 router.use((_, res) => err.bad_request(res));
 

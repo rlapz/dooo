@@ -9,13 +9,18 @@ const get_all = async () => {
 	let ret = {
 		status: true,
 		rows: 0,
-		data: []
+		data: [],
 	};
 
 
 	try {
-		ret.data = await db.query(sql_select);
-		ret.rows = ret.data.length;
+		const _ret = await db.query(sql_select);
+
+		ret.data = _ret;
+		ret.rows = _ret.length;
+
+		if (_ret.length > 0)
+			ret.data = _ret[0];
 	} catch (e) {
 		console.error(`models.todo.get_all: ${e}`);
 		err.internal_server_error();
@@ -30,14 +35,15 @@ const get_by_id = async (id) => {
 	const sql1 = `${sql_select} WHERE \`id\` = ?`;
 	let ret = {
 		status: true,
-		rows: 0,
-		data: []
+		data: null,
 	};
 
 
 	try {
-		ret.data = await db.query(sql1, [id]);
-		ret.rows = ret.data.length;
+		const _ret = await db.query(sql1, [id]);
+
+		if (_ret.length > 0)
+			ret.data = _ret[0];
 	} catch (e) {
 		console.error(`models.todo.get_by_id: ${e}`);
 		err.internal_server_error();
