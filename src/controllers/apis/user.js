@@ -7,19 +7,18 @@ const e_validator = require("../../utils/validator");
 const token = require("../../utils/token");
 
 
-const get_all = async (_, res) => {
-	res.status(200).json(await user.get());
-};
-
-
-const get_by_id = async (req, res, next) => {
-	const {id} = req.params;
+const get_by_id = async (req, res) => {
+	const {id} = req.body;
 
 
 	if (!id)
-		next();
+		return err.bad_request(res);
 
-	res.status(200).json(await user.get({id}));
+	const ret = await user.get_by_id(id);
+	if (ret.status)
+		return res.status(200).json(ret);
+
+	return res.status(ret.errno).json(ret);
 };
 
 
@@ -168,9 +167,23 @@ const sign_in = async (req, res) => {
 };
 
 
+const remove = async (req, res) => {
+	const {id} = req.body;
+
+	if (!id)
+		return err.bad_request(res);
+
+	const ret = await user.remove(id);
+	if (ret.status)
+		return res.status(200).json(ret);
+
+	return res.status(ret.errno).json(ret);
+};
+
+
 module.exports = {
-	get_all,
 	get_by_id,
 	sign_up,
 	sign_in,
+	remove
 };

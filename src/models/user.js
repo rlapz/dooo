@@ -6,28 +6,24 @@ const sql_select = "SELECT first_name, last_name, username, status FROM users";
 const sql_select_auth = "SELECT username, password FROM users WHERE username = ?";
 const sql_insert = "INSERT INTO users(first_name, last_name, username, " +
 	"email, password, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
+const sql_delete = "DELETE FROM users WHERE id = ?";
 
 
-const get = async (arg) => {
+const get_by_id = async (id) => {
 	let ret = {
 		status: true,
-		rows: 0,
 		data: []
 	};
 
 
 	try {
-		let _arg;
-		let _sql = sql_select;
+		const _sql = `${sql_select} WHERE \`id\` = ?`;
+		const _ret = await db.query(_sql, id);
 
-		if (arg) {
-			const __arg = Object.entries(arg)[0];
-			_sql = `${sql_select} WHERE \`${__arg[0]}\` = ?`;
-			_arg = __arg[1];
-		}
+		if (_ret.length == 0)
+			return err.bad_request(null, `Id: ${id} is not valid.`);
 
-		ret.data = await db.query(_sql, _arg);
-		ret.rows = ret.data.length;
+		ret.data = _ret[0];
 	} catch (e) {
 		console.error(`models.user.get: ${e}`);
 		return err.internal_server_error();
@@ -74,7 +70,8 @@ const sign_in = async (username) => {
 	try {
 		ret.data = await db.query(sql_select_auth, username);
 		if (ret.data.length === 0) {
-			return err.unauthorized(null,
+			return err.unauthorized(
+				null,
 				"Wrong 'username' or 'password'!"
 			);
 		}
@@ -87,8 +84,27 @@ const sign_in = async (username) => {
 };
 
 
+const remove = async (id) => {
+	try {
+		const _ret = await db.query(sql_delete, id);
+		if (_ret.affectedRows == 0) {
+			return err.bad_request(
+				null,
+				`Failed to delete id: ${id}.`
+			);
+		}
+	} catch (e) {
+		console.error(`models.user.remove: ${e}`);
+		return err.internal_server_error();
+	}
+
+	return {status: true};
+};
+
+
 module.exports = {
-	get,
+	get_by_id,
 	sign_up,
 	sign_in,
+	remove,
 }
