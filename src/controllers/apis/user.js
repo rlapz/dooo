@@ -100,7 +100,7 @@ const sign_up = async (req, res) => {
 		username,
 		email,
 		h_pass,
-		"e",
+		true,
 		new Date()
 	]);
 
