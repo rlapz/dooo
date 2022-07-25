@@ -1,58 +1,35 @@
-const db = require("../db/mariadb").pool;
-const err = require("../utils/api_error");
-
-
-const sql_select = "SELECT title, detail, status FROM todo";
-
-
-const get_all = async () => {
-	let ret = {
-		status: true,
-		rows: 0,
-		data: [],
-	};
-
-
-	try {
-		const _ret = await db.query(sql_select);
-
-		ret.data = _ret;
-		ret.rows = _ret.length;
-
-		if (_ret.length > 0)
-			ret.data = _ret[0];
-	} catch (e) {
-		console.error(`models.todo.get_all: ${e}`);
-		return err.internal_server_error();
-	}
-
-	return ret;
-}
+const db = require("../db");
+const err = require("../ApiError");
 
 
 const get_by_id = async (id) => {
-	const sql1 = `${sql_select} WHERE \`id\` = ?`;
-	let ret = {
-		status: true,
-		data: null,
+	const sql = "SELECT todo.id, title, detail, todo.status, " +
+		"user_status " +
+		"FROM todo INNER JOIN users " +
+		"ON todo.user_id = users.id WHERE todo.id = ?";
+
+	let ret = await db.query(
+		{sql, bigIntAsNumber: true},
+		[id, user_id]
+	);
+
+	if (ret.length == 0)
+		throw err.badRequest(`id: '${id}' is not valid`);
+
+	ret = ret[0];
+	if (!ret.user_status)
+		throw err.forbidden("This account is dactivated");
+
+
+	return {
+		id: ret.id,
+		title: ret.title,
+		detail: ret.detail,
+		status: ret.status,
 	};
-
-
-	try {
-		const _ret = await db.query(sql1, [id]);
-
-		if (_ret.length > 0)
-			ret.data = _ret[0];
-	} catch (e) {
-		console.error(`models.todo.get_by_id: ${e}`);
-		return err.internal_server_error();
-	};
-
-	return ret;
-};
+}
 
 
 module.exports = {
-	get_all,
-	get_by_id
+	get_by_id,
 }

@@ -3,26 +3,18 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const server = {
-	port: process.env.PORT || 8000,
-};
-
-const user = {
-	token: process.env.TOKEN,
-	token_expire: process.env.TOKEN_EXPIRE
-};
-
-const db = {
-	user: process.env.DB_USER,
-	password: process.env.DB_PASS,
-	host: process.env.DB_HOST,
-	database: process.env.DB_NAME,
-	connectionLimit: process.env.DB_CONN_LIM
-};
-
-
+const env = process.env;
 module.exports = {
-	server,
-	user,
-	db
+	server: {
+		port: env.PORT || 8000,
+		secret: env.SECRET,
+		secret_expire: env.SECRET_EXPIRE,
+	},
+	db: {
+		user: env.DB_USER,
+		password: env.DB_PASSWORD,
+		host: env.DB_HOST,
+		database: env.DB_NAME,
+		connectionLimit: env.DB_CONNECTION_LIMIT,
+	},
 };

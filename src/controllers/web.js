@@ -4,5 +4,5 @@ const index = (_, res) => {
 
 
 module.exports = {
-	index
+	index,
 };

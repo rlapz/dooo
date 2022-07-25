@@ -1,110 +1,152 @@
-const db = require("../db/mariadb").pool;
-const err = require("../utils/api_error");
+const db = require("../db");
+const err = require("../ApiError");
 
 
-const sql_select = "SELECT first_name, last_name, username, status FROM users";
-const sql_select_auth = "SELECT username, password FROM users WHERE username = ?";
-const sql_insert = "INSERT INTO users(first_name, last_name, username, " +
-	"email, password, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
-const sql_delete = "DELETE FROM users WHERE id = ?";
+const select = async (id) => {
+	const sql = "SELECT id, first_name, last_name, username, " +
+		" email, status FROM users WHERE id = ?";
+
+	let ret = await db.query(
+		{sql, bigIntAsNumber: true},
+		id
+	);
 
 
-const get_by_id = async (id) => {
-	let ret = {
-		status: true,
-		data: []
-	};
+	if (ret.length == 0)
+		throw err.badRequest("No data");
 
+	ret = ret[0];
+	if (!ret.status)
+		throw err.forbidden("This account is dactivated");
 
-	try {
-		const _sql = `${sql_select} WHERE \`id\` = ?`;
-		const _ret = await db.query(_sql, id);
-
-		if (_ret.length == 0)
-			return err.bad_request(null, `Id: ${id} is not valid.`);
-
-		ret.data = _ret[0];
-	} catch (e) {
-		console.error(`models.user.get: ${e}`);
-		return err.internal_server_error();
+	return {
+		id: ret.id,
+		first_name: ret.first_name,
+		last_name: ret.last_name,
+		username: ret.username,
+		email: ret.email,
+		password: ret.password,
+		status: ret.status,
 	}
-
-	return ret;
 }
 
 
-const sign_up = async (args) => {
-	try {
-		await db.query(sql_insert, args);
-	} catch (e) {
-		if (e.errno === 1062) {
-			const sp = e.text.split(" ");
-			const field = sp.at(-1).replace(/['"]+/g, "")
-			const val = sp.at(2);
-			let r = null;
+const sign_up = async (first_name, last_name, username, email, pass) => {
+	const sql = "INSERT INTO users(first_name, last_name, " +
+		"username, email, password, status, created_at) " +
+		"VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+	const ret = await db.query(sql, [
+		first_name,
+		last_name,
+		username,
+		email,
+		pass,
+		true,
+		new Date()
+	]);
 
 
-			if (field === "username")
-				r = `Username ${val} is already registered.`;
-			else if (field === "email")
-				r = `Email ${val} is already registered.`;
-
-			return err.bad_request(null, r);
-		}
-
-		console.error(`models.user.signup: ${e}`);
-		return err.internal_server_error();
-	}
-
-	return {status: true};
-};
+	if (ret.affectedRows == 0)
+		throw err.internalServerError("Failed to create new account");
+}
 
 
 const sign_in = async (username) => {
-	let ret = {
-		status: true,
-		data: []
-	};
+	const sql = "SELECT id, username, password, status FROM users " +
+		"WHERE username = ?";
+
+	let ret = await db.query(
+		{sql, bigIntAsNumber: true},
+		username
+	);
 
 
-	try {
-		ret.data = await db.query(sql_select_auth, username);
-		if (ret.data.length === 0) {
-			return err.unauthorized(
-				null,
-				"Wrong 'username' or 'password'!"
-			);
-		}
-	} catch (e) {
-		console.error(`models.user.signin: ${e}`);
-		return err.internal_server_error();
+	if (ret.length == 0)
+		throw err.unauthorized("Wrong 'username' or 'password'");
+
+	ret = ret[0];
+	if (!ret.status)
+		throw err.forbidden("This account is dactivated");
+
+	return {
+		id: ret.id,
+		username: ret.username,
+		password: ret.password,
 	}
-
-	return ret;
-};
+}
 
 
 const remove = async (id) => {
-	try {
-		const _ret = await db.query(sql_delete, id);
-		if (_ret.affectedRows == 0) {
-			return err.bad_request(
-				null,
-				`Failed to delete id: ${id}.`
-			);
-		}
-	} catch (e) {
-		console.error(`models.user.remove: ${e}`);
-		return err.internal_server_error();
+	const sql = "DELETE FROM users WHERE id = ? AND status = true";
+	const ret = await db.query(sql, id);
+
+
+	if (ret.affectedRows == 0) {
+		throw err.forbidden(
+			"Failed to remove this account. " +
+			"Make sure it is not deactivated"
+		);
+	}
+}
+
+
+const update = async (id, f_name, l_name, username, email, password) => {
+	let sql = "UPDATE users SET ";
+	let values = [];
+
+
+	if (f_name) {
+		sql += "first_name = ?, ";
+		values.push(f_name);
 	}
 
-	return {status: true};
-};
+	if (l_name) {
+		sql += "last_name = ?, ";
+		values.push(l_name);
+	}
+
+	if (username) {
+		sql += "username = ?, ";
+		values.push(username);
+	}
+
+	if (email) {
+		sql += "email = ?, ";
+		values.push(email);
+	}
+
+	if (password) {
+		sql += "password = ?, ";
+		values.push(password);
+	}
+
+	sql += "updated_at = ? ";
+	values.push(new Date());
+
+	sql += "WHERE id = ? AND status = true";
+	values.push(id);
+
+
+	if (values.length <= 2)
+		throw err.badRequest("No update");
+
+
+	let ret = await db.query(sql, values);
+
+	if (ret.affectedRows == 0) {
+		throw err.forbidden(
+			"Failed to update this account. " +
+			"Make sure it is not deactivated"
+		);
+	}
+}
 
 
 module.exports = {
-	get_by_id,
+	select,
 	sign_up,
 	sign_in,
 	remove,
-}
+	update,
+};
