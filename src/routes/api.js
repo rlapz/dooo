@@ -12,7 +12,7 @@ router.use(express.json());
 router.post("/auth/signUp", api.user.sign_up);
 router.post("/auth/signIn", api.user.sign_in);
 
-router.post("/user", token.verify, api.user.select);
+router.get("/user", token.verify, api.user.select);
 router.put("/user", token.verify, api.user.update);
 router.delete("/user", token.verify, api.user.remove);
 
