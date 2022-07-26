@@ -101,7 +101,7 @@ const update = async (id, f_name, l_name, username, email, password) => {
 		values.push(f_name);
 	}
 
-	if (l_name) {
+	if (l_name !== undefined) {
 		sql += "last_name = ?, ";
 		values.push(l_name);
 	}

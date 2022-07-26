@@ -46,15 +46,12 @@ const sign_up = async (req, res, next) => {
 		return next(err.badRequest("'first_name' is not valid"));
 
 
-	if (last_name) {
-		if (last_name.length > 64)
-			return next(err.badRequest("'last_name' is too long, max: 64"));
+	last_name ??= "";
+	if (last_name.length > 64)
+		return next(err.badRequest("'last_name' is too long, max: 64"));
 
-		if (!validator.matches(last_name, "^[a-zA-Z0-9]*$"))
-			return next(err.badRequest("'last_name' is not valid"));
-	} else {
-		last_name = null; // last_name is optional
-	}
+	if (!validator.matches(last_name, "^[a-zA-Z0-9]*$"))
+		return next(err.badRequest("'last_name' is not valid"));
 
 
 	const username_len = username.length;
@@ -179,7 +176,9 @@ const update = async (req, res, next) => {
 			return next(err.badRequest("'first_name' is not valid"));
 	}
 
-	if (last_name) {
+	if (last_name !== undefined) {
+		last_name ??= "";
+
 		if (last_name.length > 64)
 			return next(err.badRequest("'last_name' is too long, max: 64"));
 
