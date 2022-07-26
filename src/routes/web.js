@@ -11,7 +11,5 @@ router.get("/signUp", web.sign_up);
 router.get("/profile", web.profile);
 router.get("/todo", web.todo);
 
-router.use(web.not_found);
-
 
 module.exports = router;
