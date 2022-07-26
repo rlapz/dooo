@@ -80,7 +80,6 @@ const sign_up = async (req, res, next) => {
 		return next(err.badRequest("'password' is too long, max: 255"));
 
 
-
 	try {
 		let h_pass = await bcrypt.hash(password, 10);
 
@@ -153,7 +152,7 @@ const remove = async (req, res, next) => {
 
 
 	if (!auth || !auth.id)
-		return next(err.badRequest());
+		return next(err.badRequest("'id' is empty"));
 
 	try {
 		await user.remove(auth.id);

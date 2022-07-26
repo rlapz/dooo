@@ -121,15 +121,15 @@ const update = async (id, f_name, l_name, username, email, password) => {
 		values.push(password);
 	}
 
+	if (values.length <= 2)
+		throw err.badRequest("No update");
+
+
 	sql += "updated_at = ? ";
 	values.push(new Date());
 
 	sql += "WHERE id = ? AND status = true";
 	values.push(id);
-
-
-	if (values.length <= 2)
-		throw err.badRequest("No update");
 
 
 	let ret = await db.query(sql, values);

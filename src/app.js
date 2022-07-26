@@ -22,7 +22,7 @@ const signal_handler = async () => {
 	if (db.totalConnections() > 0)
 		await db.end();
 	if (server.listening)
-		await server.close(() => console.log("Server stopped."));
+		server.close(() => console.log("Server stopped."));
 };
 
 
