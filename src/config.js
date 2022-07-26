@@ -8,7 +8,7 @@ module.exports = {
 	server: {
 		port: env.PORT || 8000,
 		secret: env.SECRET,
-		secret_expire: env.SECRET_EXPIRE,
+		token_expire: env.TOKEN_EXPIRE,
 	},
 	db: {
 		user: env.DB_USER,

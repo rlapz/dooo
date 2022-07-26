@@ -137,7 +137,7 @@ const sign_in = async (req, res, next) => {
 		const token = jwt.sign(
 			{id: ret.id, username: ret.username},
 			config.server.secret,
-			{expiresIn: config.server.secret_expire},
+			{expiresIn: config.server.token_expire},
 		);
 
 		res.status(200).json({token});
