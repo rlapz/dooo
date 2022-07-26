@@ -121,7 +121,7 @@ const update = async (id, f_name, l_name, username, email, password) => {
 		values.push(password);
 	}
 
-	if (values.length <= 2)
+	if (values.length == 0)
 		throw err.badRequest("No update");
 
 
