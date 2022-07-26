@@ -6,10 +6,10 @@ const web = require("../controllers/web");
 const router = express.Router();
 
 router.get("/", web.index);
-//router.get("/signin");
-//router.get("/signup");
-//router.get("/todo");
-//router.get("/profile");
+router.get("/signIn", web.sign_in);
+router.get("/signUp", web.sign_up);
+router.get("/profile", web.profile);
+router.get("/todo", web.todo);
 
 
 module.exports = router;
