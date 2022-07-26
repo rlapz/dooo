@@ -7,7 +7,7 @@ const select = async (id) => {
 		" email, status FROM users WHERE id = ?";
 
 	let ret = await db.query(
-		{sql, bigIntAsNumber: true},
+		{rowsAsArray: true, sql, bigIntAsNumber: true},
 		id
 	);
 
@@ -16,17 +16,18 @@ const select = async (id) => {
 		throw err.badRequest("No data");
 
 	ret = ret[0];
-	if (!ret.status)
+
+	const _status = ret[5];
+	if (!_status)
 		throw err.forbidden("This account is dactivated");
 
 	return {
-		id: ret.id,
-		first_name: ret.first_name,
-		last_name: ret.last_name,
-		username: ret.username,
-		email: ret.email,
-		password: ret.password,
-		status: ret.status,
+		id: ret[0],
+		first_name: ret[1],
+		last_name: ret[2],
+		username: ret[3],
+		email: ret[4],
+		status: _status,
 	}
 }
 
@@ -62,20 +63,25 @@ const sign_in = async (username, email) => {
 
 	const sql = "SELECT id, username, password, status FROM users " +
 		"WHERE username = ? OR email = ?";
-	let ret = await db.query({sql, bigIntAsNumber: true}, [username, email]);
+	let ret = await db.query(
+		{rowsAsArray: true, sql, bigIntAsNumber: true},
+		[username, email]
+	);
 
 
 	if (ret.length == 0)
 		throw err.unauthorized("Wrong 'username', 'email', or 'password'");
 
 	ret = ret[0];
-	if (!ret.status)
+
+	const _status = ret[3];
+	if (!_status)
 		throw err.forbidden("This account is dactivated");
 
 	return {
-		id: ret.id,
-		username: ret.username,
-		password: ret.password,
+		id: ret[0],
+		username: ret[1],
+		password: ret[2],
 	}
 }
 
