@@ -7,15 +7,15 @@ const sign_in = (_, res) => {
 };
 
 const sign_up = (_, res) => {
-	res.render("signup/index", {title: "Sign In"});
+	res.render("signup/index", {title: "Sign Up"});
 };
 
 const profile = (_, res) => {
-	res.render("profile/index", {title: "Sign In"});
+	res.render("profile/index", {title: "Profile"});
 };
 
 const todo = (_, res) => {
-	res.render("todo/index", {title: "Sign In"});
+	res.render("todo/index", {title: "To Do"});
 };
 
 const not_found = (_, res) => {
