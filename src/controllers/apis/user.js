@@ -93,25 +93,36 @@ const sign_up = async (req, res, next) => {
 
 
 const sign_in = async (req, res, next) => {
-	let {username, password} = req.body;
+	let {username, email, password} = req.body;
 
 
-	if (!username)
-		return next(err.unauthorized("'username' is empty"));
+	if (!username && !email)
+		return next(err.unauthorized("'username' or 'email' are empty"));
+
 
 	if (!password)
 		return next(err.unauthorized("'password' is empty"));
 
 
-	const username_len = username.length;
-	if (username_len < 3)
-		return next(err.unauthorized("'username' is too short, min: 3"));
+	username ??= "";
+	email ??= "";
 
-	if (username_len > 16)
-		return next(err.unauthorized("'username' is too long, max: 16"));
 
-	if (!validator.matches(username, "^[a-zA-Z0-9]*$"))
-		return next(err.unauthorized("'username' is not valid"));
+	if (username) {
+		const username_len = username.length;
+		if (username_len < 3)
+			return next(err.unauthorized("'username' is too short, min: 3"));
+
+		if (username_len > 16)
+			return next(err.unauthorized("'username' is too long, max: 16"));
+
+		if (!validator.matches(username, "^[a-zA-Z0-9]*$"))
+			return next(err.unauthorized("'username' is not valid"));
+	}
+
+
+	if (email && !validator.isEmail(email))
+		return next(err.unauthorized("'email' is not valid"));
 
 
 	const password_len = password.length;
@@ -123,11 +134,11 @@ const sign_in = async (req, res, next) => {
 
 
 	try {
-		const ret = await user.sign_in(username);
+		const ret = await user.sign_in(username, email);
 
 		if (!await bcrypt.compare(password, ret.password)) {
 			throw err.unauthorized(
-				"Wrong 'username' or 'password'"
+				"Wrong 'username', 'email', or 'password'"
 			);
 		}
 

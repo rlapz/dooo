@@ -52,18 +52,21 @@ const sign_up = async (first_name, last_name, username, email, pass) => {
 }
 
 
-const sign_in = async (username) => {
-	const sql = "SELECT id, username, password, status FROM users " +
-		"WHERE username = ?";
+const sign_in = async (username, email) => {
+	if (username && email) {
+		throw err.unauthorized(
+			"Cannot accept both 'username' and 'email', " +
+			"please choose one"
+		);
+	}
 
-	let ret = await db.query(
-		{sql, bigIntAsNumber: true},
-		username
-	);
+	const sql = "SELECT id, username, password, status FROM users " +
+		"WHERE username = ? OR email = ?";
+	let ret = await db.query({sql, bigIntAsNumber: true}, [username, email]);
 
 
 	if (ret.length == 0)
-		throw err.unauthorized("Wrong 'username' or 'password'");
+		throw err.unauthorized("Wrong 'username', 'email', or 'password'");
 
 	ret = ret[0];
 	if (!ret.status)
