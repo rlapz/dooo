@@ -18,6 +18,10 @@ const todo = (_, res) => {
 	res.render("todo/index", {title: "Sign In"});
 };
 
+const not_found = (_, res) => {
+	res.render("404", {title: "404 Not Found!"});
+};
+
 
 module.exports = {
 	index,
@@ -25,4 +29,5 @@ module.exports = {
 	sign_up,
 	profile,
 	todo,
+	not_found,
 };

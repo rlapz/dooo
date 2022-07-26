@@ -8,6 +8,8 @@ const router = express.Router();
 
 router.use("/", web);
 router.use("/api", api);
+
+/* Guard */
 router.use((_, res) => res.status(404).send("Not Found"));
 
 
